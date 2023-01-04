@@ -1,6 +1,17 @@
 import numpy as np
 import torch
 
+
+def WeightStand(w, eps=1e-5):
+
+    mean = torch.mean(input=w, dim=[0,1], keepdim=True)
+    var = torch.var(input=w, dim=[0,1], keepdim=True)
+
+    w = (w - mean) / torch.sqrt(var + eps)
+
+    return w
+
+
 class HebbianNet:
     def __init__(self, sizes):
         """
@@ -42,7 +53,7 @@ class HebbianNet:
 
 
         weights = weights + lr * (A*ij + B*i + C*j + D)
-
+        weights = WeightStand(weights)
         return weights
 
 
